@@ -1,13 +1,35 @@
+body{
+	font-family: Georgia;
+}
 #redis_search{
 	font-size:1em;
-	width:900px;
+	width:533px;
 }
 #search_container{
-	font-size:3em;
+	font-size:2em;
 }
 
 #redis_container{
-	width: 900px;
+	width: 600px;
 	height: 600px;
 	border:1px solid #9E9E9E;
+	padding:6px;
+	overflow:auto;
+}
+.redis_key{
+	padding:1px;
+}
+.redis_value_container{
+	padding-left: 20px;
+}
+
+.key_member{
+	color:#6E0D0D;
+}
+.value_member{
+	color:#025403;
+}
+
+.hover{
+	background-color:#F2FAC0;
 }
