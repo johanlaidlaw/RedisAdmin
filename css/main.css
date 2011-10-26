@@ -1,0 +1,13 @@
+#redis_search{
+	font-size:1em;
+	width:900px;
+}
+#search_container{
+	font-size:3em;
+}
+
+#redis_container{
+	width: 900px;
+	height: 600px;
+	border:1px solid #9E9E9E;
+}
