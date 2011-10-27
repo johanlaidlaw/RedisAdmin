@@ -11,7 +11,7 @@ body{
 
 #redis_container{
 	width: 600px;
-	height: 600px;
+	height: 500px;
 	border:1px solid #9E9E9E;
 	padding:6px;
 	overflow:auto;
@@ -23,13 +23,36 @@ body{
 	padding-left: 20px;
 }
 
-.key_member{
+.r_field{
 	color:#6E0D0D;
 }
-.value_member{
+.r_value{
 	color:#025403;
 }
 
 .hover{
 	background-color:#F2FAC0;
+}
+#wrap{
+	width:100%;
+	margin:0 auto;
+}
+#left_container{
+	float:left;
+	width:600;
+	padding-left:10px;
+}
+#right_container{
+	float:right;
+	font-size:0.8em;
+}
+#server_stats table{
+	border-collapse:collapse;
+}
+#server_stats table td{
+	border:1px solid #E3E3E3;
+	padding:3px;
+}
+#footer{
+	clear:both;
 }

@@ -3,13 +3,7 @@ namespace lib\redis;
 
 class Redis{
 	
-	private $redis_client;
-	
-	function __construct(){
-		$this->redis_client = RedisClient::getPredisObject();
-	}
-	
-	
+	/*
 	function getAllValues($key){
 		$type = $this->redis_client->type($key);
 		$command = $this->getCommandForGettingAllValues($type);
@@ -21,27 +15,37 @@ class Redis{
 		}
 		return $values;
 	}
+	*/
 	
 	
-	private function getCommandForGettingAllValues($type){
+	function getTypeObj($key){
+		$r = RedisClient::getPredisObject();
+		$type = $r->type($key);
+		return $this->findType($type);
+	}
+	
+	
+	private function findType($type){
 		switch($type){
 			case 'string':
-				$command = 'get';
+				$obj = new RedisString;
 				break;
 			case 'hash':
-				$command = 'hgetall';
+				$obj = new RedisHash();
 				break;
 			case 'set':
-				$command = 'smembers';
+				$obj = new RedisSet();
 				break;
 			case 'list':
-				$command = 'lrange';
+				$obj = new RedisList();
 				break;
 			default:
-				$command = null;
+				$obj = null;
 		}
-		return $command;
+		return $obj;
+		
 	}
+	
 	
 }
 

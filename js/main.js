@@ -1,4 +1,8 @@
 $(document).ready(function(){
+	$("body").click(function(){
+		$('.edit').parent().html($('.edit').val());
+	});
+	
 	$('#redis_search').keyup(function(e){
 		if(e.which == 38 || e.which == 40){
 			// Up or Down
@@ -36,7 +40,7 @@ $(document).ready(function(){
 			
 		}else if(e.which == 13){
 			// keypress = Enter
-			clickOnKey();
+			expandKey();
 		}else if(e.which == 46){
 			if(confirm('Do you really want to delete this key?')){
 				console.log("Delete key");
@@ -52,7 +56,7 @@ $(document).ready(function(){
 					} else {
 						element = '';
 						$.each(data, function(i, item){
-							element += '<div class="redis_key">'+item+'</div>';
+							element += '<div class="r_key">'+item+'</div>';
 						})
 						$("#redis_container").html(element);
 					}
@@ -64,8 +68,8 @@ $(document).ready(function(){
 	});
 	
 	
-	$('.redis_key').live({
-		click: clickOnKey,
+	$('.r_key').live({
+		click: expandKey,
 		mouseover: function(){
 			$(this).siblings().removeClass('hover');
 			$(this).addClass('hover').css({cursor:'pointer'});
@@ -76,7 +80,7 @@ $(document).ready(function(){
 	});
 	
 	
-	function clickOnKey(){
+	function expandKey(){
 		var element = $("#redis_container div.hover");
 		var value = element.html();
 		if(element.next().attr('class') == 'redis_value_container'){
@@ -88,7 +92,7 @@ $(document).ready(function(){
 				success: function(data, status) {
 					field = '<div class="redis_value_container">';
 					$.each(data,function(i,item){
-						field += '<div class="redis_member"><span class="key_member">'+i+'</span> => <span class="value_member">'+item+'</span></div>';
+						field += '<div class="r_member"><span class="r_field">'+i+'</span> => <span class="r_value">'+item+'</span></div>';
 					});
 					field += '</div>';
 					element.after(field);
@@ -98,5 +102,47 @@ $(document).ready(function(){
 		}
 	}
 	
+	$('.r_value').live({
+		click: editValue,
+		mouseover:function(){
+			$(this).addClass('hover');
+		},
+		mouseout: function(){
+			$(this).removeClass('hover');
+		}
+	});
+	
+	
+	function editValue(){
+		element = $(this);
+		hasInput = element.find(':input');
+		if(hasInput.length == 0){
+			// Already an input field
+			content = element.html();
+			element.html('<input type="text" class="edit" />');
+			input = $('.edit');
+			input.val(content);
+			input.attr('size',content.length*1.5);
+			input.focus();
+			input.keyup(function(e){
+				if(e.which == 13){
+					value = input.val();
+					key = input.parent().parent().parent().prev().html();
+					field = input.parent().prev().html();
+					$.ajax({
+						url: "/redis/setValueForField?key="+key+"&field="+field+"&value="+value,
+						dataType: 'json',
+						success: function(data, status) {
+							new_content = input.val();
+							element.html(new_content);	
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {}
+					});
+					
+				}
+			});
+
+		}
+	}
 	
 });

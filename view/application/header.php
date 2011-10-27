@@ -11,4 +11,4 @@
 	<title>Football radar</title>
 </head>
 <body>
-<div class="main">
+<div id="wrap">

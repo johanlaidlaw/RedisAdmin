@@ -12,11 +12,21 @@ class RedisController extends ApplicationController{
 	function get_values(){
 		$key = $this->params['key'];
 		$r = new lib\redis\Redis();
-		$values = $r->getAllValues($key);
+		$typeObj = $r->getTypeObj($key);
+		$values = $typeObj->getAllValues($key);
 		echo json_encode($values);
 	}
 
 	
+	function setValueForField(){
+		$key = $this->params['key'];
+		$field = $this->params['field'];
+		$new_value = $this->params['value'];
+		$r = new lib\redis\Redis();
+		$typeObj = $r->getTypeObj($key);
+		$bool = $typeObj->setValueForField($key, $field, $new_value);
+		echo json_encode($bool);
+	}
 
 }
 
