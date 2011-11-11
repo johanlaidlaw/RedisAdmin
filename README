@@ -1,0 +1,5 @@
+1. Clone the project
+2. Place the project in a webfolder
+3. Access it (http://redisadmin)
+
+It expects you are running Redis locally on the standard port 6379
