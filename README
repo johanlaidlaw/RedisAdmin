@@ -3,3 +3,5 @@
 3. Access it (http://redisadmin)
 
 It expects you are running Redis locally on the standard port 6379
+
+Hello
