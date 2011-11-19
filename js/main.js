@@ -57,7 +57,7 @@ $(document).ready(function(){
 						element = '';
 						$.each(data, function(i, item){
 							element += '<div class="r_key">'+item+'</div>';
-						})
+						});
 						$("#redis_container").html(element);
 					}
 				},
@@ -78,31 +78,8 @@ $(document).ready(function(){
 			$(this).removeClass('hover');
 		}
 	});
-	
-	
-	function expandKey(){
-		var element = $("#redis_container div.hover");
-		var value = element.html();
-		if(element.next().attr('class') == 'redis_value_container'){
-			element.next().remove();
-		}else{
-			$.ajax({
-				url: "/redis/get_values?key="+value,
-				dataType: 'json',
-				success: function(data, status) {
-					field = '<div class="redis_value_container">';
-					$.each(data,function(i,item){
-						field += '<div class="r_member"><span class="r_field">'+i+'</span> => <span class="r_value">'+item+'</span></div>';
-					});
-					field += '</div>';
-					element.after(field);
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {}
-			});
-		}
-	}
-	
-	$('.r_value').live({
+
+    $('.r_value').live({
 		click: editValue,
 		mouseover:function(){
 			$(this).addClass('hover');
@@ -111,8 +88,68 @@ $(document).ready(function(){
 			$(this).removeClass('hover');
 		}
 	});
-	
-	
+
+
+    $(document).on("submit","form[name=new_member]",function(){
+        var redis_value_container = $(this).parent().parent();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(data, status) {
+                fields = populateRedisValueContainer(data.data, data.type);
+                redis_value_container.html(fields);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {}
+        });
+        return false;
+    });
+
+
+    $(document).on("click",".add_to_hash",function(){
+        $(this).removeClass().addClass('add_member_edit');
+        $(this).html('<form name="new_member" method="post" action="/redis/addMember"><input type="hidden" value="'+$(this).parent().prev().html()+'" name="key" /><input type="text" name="member_key" /> => <input type="text" name="member_value"/> <input type="submit" value="ok" /></form>');
+        
+    });
+
+
+	function expandKey(){
+		var element = $("#redis_container div.hover");
+		var value = element.html();
+		if(element.next().attr('class') == 'redis_value_container'){
+			element.next().remove();
+		}else{
+			$.ajax({
+				url: "/redis/getValues?key="+value,
+				dataType: 'json',
+				success: function(data, status) {
+					field = '<div class="redis_value_container">';
+                    field += populateRedisValueContainer(data.data, data.type);
+					field += '</div>';
+					element.after(field);
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {}
+			});
+		}
+	}
+
+    function populateRedisValueContainer(data, type){
+        field = '';
+        $.each(data,function(i,item){
+            field += '<div class="r_member"><span class="r_field">'+i+'</span> => <span class="r_value">'+item+'</span></div>';
+        });
+        field += addType(type);
+        return field;
+    }
+    function addType(type){
+        var new_type = '';
+        if(type == "hash")
+            new_type = '<div class="add_to_hash">Add member to hash</div>';
+        return new_type;
+    }
+
+
 	function editValue(){
 		element = $(this);
 		hasInput = element.find(':input');
@@ -130,7 +167,8 @@ $(document).ready(function(){
 					key = input.parent().parent().parent().prev().html();
 					field = input.parent().prev().html();
 					$.ajax({
-						url: "/redis/setValueForField?key="+key+"&field="+field+"&value="+value,
+						url: "/redis/setValueForField",
+                        data: {'key': key, 'field': field, 'value' : value},
 						dataType: 'json',
 						success: function(data, status) {
 							new_content = input.val();
