@@ -9,15 +9,6 @@ class ApplicationController{
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	function render($file = false){
 		if(!$file){
 			$backtrace = debug_backtrace();
@@ -33,7 +24,7 @@ class ApplicationController{
 	}
 	
 	function setParams($params){
-		$this->params = $params;
+		$this->params = array_merge($params,$_POST);
 	}
 	
 }

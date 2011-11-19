@@ -5,7 +5,7 @@
 	<meta name="author" content="Johan Laidlaw" />
 	
 	<link rel="stylesheet" type="text/css" href="/css/main.css" />
-	<script type="text/javascript" src="/js/jquery-1.6.4.min.js"></script>
+	<script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
 	<script type="text/javascript" src="/js/main.js"></script>
 	
 	<title>Football radar</title>
