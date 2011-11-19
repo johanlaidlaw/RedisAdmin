@@ -14,6 +14,7 @@ class RedisController extends ApplicationController{
 		$r = new lib\redis\Redis();
 		$typeObj = $r->getTypeObj($key);
 		$values = $typeObj->getAllValues($key);
+        ksort($values);
 		echo json_encode($values);
 	}
 
