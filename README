@@ -3,3 +3,13 @@
 3. Access it (http://redisadmin)
 
 It expects you are running Redis locally on the standard port 6379
+
+
+
+Feature list:
+-------------------------
+
+* Show friendly message when trying to open a key that does not exist anymore.
+* Delete member from a hash
+* Add new string, hash, list, set
+* The keyboard navigation is a bit bucky
