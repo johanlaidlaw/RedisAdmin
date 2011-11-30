@@ -12,4 +12,4 @@ Feature list:
 * Show friendly message when trying to open a key that does not exist anymore.
 * Delete member from a hash
 * Add new string, hash, list, set
-* The keyboard navigation is a bit bucky
+* The keyboard navigation is a bit buggy
