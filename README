@@ -10,10 +10,13 @@ Feature list:
 -------------------------
 
 * Switch database
-* Show friendly message when trying to open a key that does not exist anymore.
 * Show friendly message when redis server is not running
 * Delete member from a hash/set
-* Show the type of each key
-* Set max numbers of keys returned when searching
 * Add new string, hash, list, set
 * Add some CSS magic
+
+
+Done:
+-------------------------
+* Show friendly message when trying to open a key that does not exist anymore.
+* Set max numbers of keys returned when searching
