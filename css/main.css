@@ -57,10 +57,18 @@ body{
 	clear:both;
 }
 
-.add_to_hash:hover{
+.add_field_to_hash:hover{
     cursor:pointer;
     color:#7E93F2;
 }
-.add_to_hash{
+.add_field_to_hash{
     color:#001C96;
+}
+.deleted_key{
+    color:red;
+}
+
+.warning{
+    color:#5961D9;
+    font-weight: bold;
 }

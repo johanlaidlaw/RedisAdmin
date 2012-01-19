@@ -2,12 +2,16 @@
 class ApplicationController{
 	
 	var $params = array();
-	
-	
-	function __construct(){
-		
-	}
-	
+    var $view = array();
+
+    function set($name, $value){
+        $this->view[$name] = $value;
+    }
+    function get($name){
+        if(isset($this->view[$name]))
+            return $this->view[$name];
+        else return null;
+    }
 	
 	function render($file = false){
 		if(!$file){

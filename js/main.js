@@ -1,4 +1,7 @@
 $(document).ready(function(){
+
+    getKeysByPattern("*");
+
 	$("body").click(function(){
 		$('.edit').parent().html($('.edit').val());
 	});
@@ -47,22 +50,7 @@ $(document).ready(function(){
 			}
 		}else{
 			var value = $(this).val();
-			$.ajax({
-				url: "/redis/exec?command=keys&key="+value+"*",
-				dataType: 'json',
-				success: function(data, status) {
-					if($.isEmptyObject(data)){
-						$("#redis_container").html("No keys matching");
-					} else {
-						element = '';
-						$.each(data, function(i, item){
-							element += '<div class="r_key">'+item+'</div>';
-						});
-						$("#redis_container").html(element);
-					}
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {}
-			});
+            getKeysByPattern(value+"*");
 		}
 		
 	});
@@ -90,7 +78,10 @@ $(document).ready(function(){
 	});
 
 
-    $(document).on("submit","form[name=new_member]",function(){
+    /*
+    The ajax call to insert a new field to a hash
+     */
+    $(document).on("submit","form[name=new_field_to_hash]",function(){
         var redis_value_container = $(this).parent().parent();
         $.ajax({
             url: $(this).attr('action'),
@@ -107,9 +98,10 @@ $(document).ready(function(){
     });
 
 
-    $(document).on("click",".add_to_hash",function(){
+    $(document).on("click",".add_field_to_hash",function(){
         $(this).removeClass().addClass('add_member_edit');
-        $(this).html('<form name="new_member" method="post" action="/redis/addMember"><input type="hidden" value="'+$(this).parent().prev().html()+'" name="key" /><input type="text" name="member_key" /> => <input type="text" name="member_value"/> <input type="submit" value="ok" /></form>');
+        key = $(this).parent().prev();
+        $(this).html('<form name="new_field_to_hash" method="post" action="/hash/addField"><input type="hidden" value="'+key.html()+'" name="key" /><input type="text" name="field" /> => <input type="text" name="value"/> <input type="submit" value="ok" /></form>');
         
     });
 
@@ -120,14 +112,22 @@ $(document).ready(function(){
 		if(element.next().attr('class') == 'redis_value_container'){
 			element.next().remove();
 		}else{
+            type = element.attr('type');
 			$.ajax({
-				url: "/redis/getValues?key="+value,
+				url: type+"/getValues?key="+value,
 				dataType: 'json',
 				success: function(data, status) {
-					field = '<div class="redis_value_container">';
-                    field += populateRedisValueContainer(data.data, data.type);
-					field += '</div>';
-					element.after(field);
+                    if(data == false){
+                        element.addClass("deleted_key").html("This key has been deleted");
+                        setTimeout(function(){
+                            element.hide(2000, function(){ element.remove(); });
+                        },1000);
+                    }else{
+                        field = '<div class="redis_value_container">';
+                        field += populateRedisValueContainer(data.data, data.type);
+                        field += '</div>';
+                        element.after(field);
+                    }
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {}
 			});
@@ -145,7 +145,7 @@ $(document).ready(function(){
     function addType(type){
         var new_type = '';
         if(type == "hash")
-            new_type = '<div class="add_to_hash">Add member to hash</div>';
+            new_type = '<div class="add_field_to_hash">Add member to hash</div>';
         return new_type;
     }
 
@@ -164,11 +164,13 @@ $(document).ready(function(){
 			input.keyup(function(e){
 				if(e.which == 13){
 					value = input.val();
-					key = input.parent().parent().parent().prev().html();
+                    key = input.parent().parent().parent().prev();
+					key_name = key.html();
+                    type = key.attr('type');
 					field = input.parent().prev().html();
 					$.ajax({
-						url: "/redis/setValueForField",
-                        data: {'key': key, 'field': field, 'value' : value},
+						url: type+"/editField",
+                        data: {'key': key_name, 'field': field, 'value' : value, 'old_value' : content},
 						dataType: 'json',
 						success: function(data, status) {
 							new_content = input.val();
@@ -184,3 +186,31 @@ $(document).ready(function(){
 	}
 	
 });
+
+
+function getKeysByPattern(pattern){
+    $.ajax({
+        url: "/redis/keys?pattern="+pattern,
+        dataType: 'json',
+        success: function(data, status) {
+            console.log(data);
+
+            if(data.keys.length < 1){
+                $("#redis_container").html("No keys matching");
+            } else {
+                if(data.sliced)
+                    element = '<div class="warning">Too many keys returned. Please be more specific in your search</div>';
+                else
+                    element = '';
+
+                $.each(data.keys, function(i, item){
+                    element += '<div class="r_key" type="'+item[1]+'">'+item[0]+'</div>';
+                });
+                $("#redis_container").html(element);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {}
+    });
+}
+
+

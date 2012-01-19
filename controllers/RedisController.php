@@ -1,6 +1,43 @@
 <?php
 class RedisController extends ApplicationController{
 
+    function __construct(){
+        $this->redis = lib\redis\RedisClient::getPredisObject();
+    }
+
+    function keys(){
+        $keys = $this->redis->keys($this->params['pattern']);
+        $keys_with_types = array();
+        $sliced = false;
+        if(count($keys) > 100){
+            $sliced = true;
+            $keys = array_slice($keys,0,100);
+        }
+        foreach($keys as $k){
+            $keys_with_types[] = array($k, $this->redis->type($k));
+        }
+        echo json_encode(array("keys" =>$keys_with_types, "sliced" => $sliced));
+    }
+
+    function del(){
+        $bool = $this->redis->del($this->params['key']);
+        echo json_encode($bool);
+    }
+
+
+
+
+
+    protected function returnAllFields($fields, $type){
+        if(empty($fields))
+            echo json_encode(false);
+        else{
+            ksort($fields);
+            echo json_encode(array("data" =>$fields, "type" => $type));
+        }
+    }
+
+    /*
 	function exec(){
 		$command = $this->params['command'];
 		$key = $this->params['key'];
@@ -36,6 +73,7 @@ class RedisController extends ApplicationController{
 
         //echo json_encode("hej");
     }
+    */
 
 }
 
