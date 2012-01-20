@@ -1,11 +1,19 @@
 <div id="left_container">
-	<div id="search_container">Keys <input type="text" id="redis_search">*</div>
+	<div id="search_container">
+        Keys <input type="text" id="redis_search">* in db
+        <select id="database_select">
+            <?php $selected = isset($_SESSION['redis_db']) ? $_SESSION['redis_db'] : 0;?>
+            <?php foreach(range(0, 15) as $i):?>
+                <option value="<?php echo $i;?>"<?php if($i==$selected):?> selected<?php endif;?>><?php echo $i;?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
 	<div id="redis_container">
 	</div>
 </div>
 
 <div id="right_container">
-    <a class="toggle" href = "#" onclick="$('#server_stats').toggle();">Toggle stats</a>
+    <a class="toggle" href = "#" onclick="$('#server_stats').toggle();return false;">Toggle stats</a>
 	<div id="server_stats" style="display;none;">
 		<h2>Server stats</h2>
 		<table>
