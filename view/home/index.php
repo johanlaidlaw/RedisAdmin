@@ -5,7 +5,8 @@
 </div>
 
 <div id="right_container">
-	<div id="server_stats">
+    <a class="toggle" href = "#" onclick="$('#server_stats').toggle();">Toggle stats</a>
+	<div id="server_stats" style="display;none;">
 		<h2>Server stats</h2>
 		<table>
 		<?php
