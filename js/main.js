@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    getKeysByPattern("*");
+    getKeys();
 
 	$("body").click(function(){
 		$('.edit').parent().html($('.edit').val());
@@ -50,12 +50,24 @@ $(document).ready(function(){
 			}
 		}else{
 			var value = $(this).val();
-            getKeysByPattern(value+"*");
+            getKeys();
 		}
 		
 	});
 	
-	
+
+    $("#database_select").change(function(){
+        var value = $(this).val();
+        $.ajax({
+            url: "/redis/setDatabase?db="+value,
+            dataType: 'json',
+            success: function(data, status) {
+                getKeys();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {}
+        });
+    });
+
 	$('.r_key').live({
 		click: expandKey,
 		mouseover: function(){
@@ -198,7 +210,8 @@ $(document).ready(function(){
 });
 
 
-function getKeysByPattern(pattern){
+function getKeys(){
+    var pattern = $("#redis_search").val() + "*";
     $.ajax({
         url: "/redis/keys?pattern="+pattern,
         dataType: 'json',
@@ -209,7 +222,7 @@ function getKeysByPattern(pattern){
                 $("#redis_container").html("No keys matching");
             } else {
                 if(data.sliced)
-                    element = '<div class="warning">Too many keys returned. Please be more specific in your search</div>';
+                    element = '<div class="warning">More than 100 keys found. Showing first 100 only</div>';
                 else
                     element = '';
 

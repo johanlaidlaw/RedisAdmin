@@ -1,8 +1,10 @@
 body{ font-family: Georgia; margin:0; }
 #wrap{ width:100%; margin:0 auto; }
 
-#search_container { font-size:2em; padding:9px;  border-bottom:1px solid #A2A8BD;}
+#search_container { font-size:2em; padding:9px;  border-bottom:1px solid #ccc;}
     #search_container #redis_search { font-size:1em; width:533px; }
+
+#search_container #database_select { font-size:2em; }
 
 #redis_container { border-top:1px solid #eee; overflow:auto; }
     .redis_key{ padding:1px; }
@@ -15,7 +17,7 @@ body{ font-family: Georgia; margin:0; }
     .add_field:hover{cursor:pointer; color:#7E93F2;}
     .add_field{ color:#001C96; }
     .deleted_key{ color:red; }
-    .warning{color:#5961D9;font-weight: bold;}
+    .warning{ color:#993;font-weight: bold; background:#FFC; font-size:16px; padding:6px; border-bottom:1px solid #ccc;}
 
 .hover{ background-color:#F2FAC0;}
 
