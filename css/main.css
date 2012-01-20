@@ -1,26 +1,31 @@
 body{
 	font-family: Georgia;
+    margin:0;
 }
 #redis_search{
 	font-size:1em;
 	width:533px;
 }
+#database_select {
+    font-size:1.4em;
+}
+
+
 #search_container{
 	font-size:2em;
+    border-bottom: 1px solid #999;
+    border-right: 1px solid #999;
+    padding:5px;
 }
 
 #redis_container{
-	width: 600px;
-	height: 800px;
-	border:1px solid #9E9E9E;
-	padding:6px;
 	overflow:auto;
 }
 .redis_key{
 	padding:1px;
 }
 .redis_value_container{
-	padding-left: 20px;
+	padding-left: 30px;
 }
 
 .r_field{
@@ -38,13 +43,18 @@ body{
 	margin:0 auto;
 }
 #left_container{
-	float:left;
-	width:600;
-	padding-left:10px;
+    padding-right:290px;
 }
 #right_container{
-	float:right;
+	position:absolute;
+    top:0px;
+    right:0px;
 	font-size:0.8em;
+    padding:10px 20px;
+    width:250px;
+    border-left:1px solid #eee;
+    border-bottom:1px solid #eee;
+    color:#777;
 }
 #server_stats table{
 	border-collapse:collapse;
@@ -63,4 +73,12 @@ body{
 }
 .add_to_hash{
     color:#001C96;
+    padding:5px;
 }
+
+div.r_key { padding:5px 5px 5px 10px; border-bottom:1px solid #eee; border-right:1px solid #eee;  }
+div.r_member { padding:5px; border-bottom:1px solid #eee; }
+
+.message { padding:10px; display:none;}
+    #error_message { background:#EB9696; color:#522727;}
+    #message { background:#F0EDCE; color:#4F4E3F;}

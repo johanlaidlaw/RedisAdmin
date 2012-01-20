@@ -1,20 +1,27 @@
 <div id="left_container">
-	<div id="search_container">Keys <input type="text" id="redis_search">*</div>
-	<div id="redis_container">
-	<?php
-	$redis = lib\redis\RedisClient::getPredisObject();	
-	foreach($redis->keys('*') as $key => $value){
-		echo '<div class="r_key">'.$value.'</div>';
-	}
-	?>
-	</div>
+	<div id="search_container">
+        Keys <input type="text" id="redis_search">* from db
+        <select  id="database_select">
+            <?php foreach(range(0,15) as $key):?>
+                <option value="<?php echo $key;?>"><?php echo $key;?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <div id="error_message" class="message"></div>
+    <div id="message" class="message"></div>
+	<div id="redis_container"></div>
 </div>
 
 <div id="right_container">
 	<div id="server_stats">
 		<h2>Server stats</h2>
 		<table>
-		<?php 
+            <?php
+        try {
+            $redis = lib\redis\RedisClient::getPredisObject();
+         } catch (\Predis\Network\ConnectionException $e) {
+
+         }
 		foreach($redis->info() as $desc => $info){
 			if($desc == 'db0'){
 				echo '<tr><td style="background-color:#E3E3E3" colspan="2">'.$desc.'</td></tr>';

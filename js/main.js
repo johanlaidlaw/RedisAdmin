@@ -1,8 +1,37 @@
+
+function fetchKeys(){
+    var value = $('#redis_search').val() + "*";
+    var database = $('#database_select').val();
+    $.ajax({
+        url: "/redis/exec?command=keys&key="+value+"&db="+database,
+        dataType: 'json',
+        success: function(response, status) {
+            $(".message").hide();
+            if(response.error){
+                $("#error_message").html(response.message).show();
+            } else {
+                element = '';
+                $.each(response.data, function(i, item){
+                    element += '<div class="r_key">'+item+'</div>';
+                });
+                $("#redis_container").html(element);
+                if(typeof(response.message) != "undefined"){
+                    $("#message").html(response.message).show();
+                }
+            }
+
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {}
+    });
+}
+
 $(document).ready(function(){
 	$("body").click(function(){
 		$('.edit').parent().html($('.edit').val());
 	});
-	
+    $('#database_select').change(function(){
+        fetchKeys();
+    });
 	$('#redis_search').keyup(function(e){
 		if(e.which == 38 || e.which == 40){
 			// Up or Down
@@ -46,23 +75,7 @@ $(document).ready(function(){
 				console.log("Delete key");
 			}
 		}else{
-			var value = $(this).val();
-			$.ajax({
-				url: "/redis/exec?command=keys&key="+value+"*",
-				dataType: 'json',
-				success: function(data, status) {
-					if($.isEmptyObject(data)){
-						$("#redis_container").html("No keys matching");
-					} else {
-						element = '';
-						$.each(data, function(i, item){
-							element += '<div class="r_key">'+item+'</div>';
-						});
-						$("#redis_container").html(element);
-					}
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {}
-			});
+            fetchKeys();
 		}
 		
 	});
@@ -116,12 +129,13 @@ $(document).ready(function(){
 
 	function expandKey(){
 		var element = $("#redis_container div.hover");
+        var database = $('#database_select').val();
 		var value = element.html();
 		if(element.next().attr('class') == 'redis_value_container'){
 			element.next().remove();
 		}else{
 			$.ajax({
-				url: "/redis/getValues?key="+value,
+				url: "/redis/getValues?key="+value + "&db=" + database,
 				dataType: 'json',
 				success: function(data, status) {
 					field = '<div class="redis_value_container">';
@@ -161,6 +175,7 @@ $(document).ready(function(){
 			input.val(content);
 			input.attr('size',content.length*1.5);
 			input.focus();
+            var database = $('#database_select').val();
 			input.keyup(function(e){
 				if(e.which == 13){
 					value = input.val();
@@ -168,7 +183,7 @@ $(document).ready(function(){
 					field = input.parent().prev().html();
 					$.ajax({
 						url: "/redis/setValueForField",
-                        data: {'key': key, 'field': field, 'value' : value},
+                        data: {'key': key, 'field': field, 'value' : value, 'db': database},
 						dataType: 'json',
 						success: function(data, status) {
 							new_content = input.val();
@@ -182,5 +197,7 @@ $(document).ready(function(){
 
 		}
 	}
-	
+
+    fetchKeys();
+
 });
