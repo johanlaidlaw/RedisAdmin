@@ -1,10 +1,9 @@
-1. Clone the project
-2. Place the project in a webfolder
+1. Clone the project into a webfolder
+2. git submodule init
+3. git submodule update
 3. Access it (http://redisadmin)
 
-It expects you are running Redis locally on the standard port 6379
-
-
+It expects you are running Redis locallyon the standard port 6379 with no password
 
 Feature list:
 -------------------------
@@ -12,7 +11,6 @@ Feature list:
 * Show friendly message when redis server is not running
 * Delete member from a hash/set
 * Add new string, hash, list, set
-
 
 
 Done:
