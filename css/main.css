@@ -12,8 +12,8 @@ body{ font-family: Georgia; margin:0; }
     .r_value{ color:#025403; }
     .r_member { padding:3px; border-bottom:1px solid #eee; }
 
-    .add_field_to_hash:hover{cursor:pointer; color:#7E93F2;}
-    .add_field_to_hash{ color:#001C96; }
+    .add_field:hover{cursor:pointer; color:#7E93F2;}
+    .add_field{ color:#001C96; }
     .deleted_key{ color:red; }
     .warning{color:#5961D9;font-weight: bold;}
 
