@@ -1,74 +1,29 @@
-body{
-	font-family: Georgia;
-}
-#redis_search{
-	font-size:1em;
-	width:533px;
-}
-#search_container{
-	font-size:2em;
-}
+body{ font-family: Georgia; margin:0; }
+#wrap{ width:100%; margin:0 auto; }
 
-#redis_container{
-	width: 600px;
-	height: 800px;
-	border:1px solid #9E9E9E;
-	padding:6px;
-	overflow:auto;
-}
-.redis_key{
-	padding:1px;
-}
-.redis_value_container{
-	padding-left: 20px;
-}
+#search_container { font-size:2em; padding:9px;  border-bottom:1px solid #A2A8BD;}
+    #search_container #redis_search { font-size:1em; width:533px; }
 
-.r_field{
-	color:#6E0D0D;
-}
-.r_value{
-	color:#025403;
-}
+#redis_container { border-top:1px solid #eee; overflow:auto; }
+    .redis_key{ padding:1px; }
+    .redis_value_container{ padding-left: 30px; }
+    .r_field{ color:#6E0D0D; }
+    .r_key { padding:5px 5px 5px 10px; border-bottom:1px solid #eee; border-right:1px solid #eee; }
+    .r_value{ color:#025403; }
+    .r_member { padding:3px; border-bottom:1px solid #eee; }
 
-.hover{
-	background-color:#F2FAC0;
-}
-#wrap{
-	width:100%;
-	margin:0 auto;
-}
-#left_container{
-	float:left;
-	width:600;
-	padding-left:10px;
-}
-#right_container{
-	float:right;
-	font-size:0.8em;
-}
-#server_stats table{
-	border-collapse:collapse;
-}
-#server_stats table td{
-	border:1px solid #E3E3E3;
-	padding:3px;
-}
-#footer{
-	clear:both;
-}
+    .add_field_to_hash:hover{cursor:pointer; color:#7E93F2;}
+    .add_field_to_hash{ color:#001C96; }
+    .deleted_key{ color:red; }
+    .warning{color:#5961D9;font-weight: bold;}
 
-.add_field_to_hash:hover{
-    cursor:pointer;
-    color:#7E93F2;
-}
-.add_field_to_hash{
-    color:#001C96;
-}
-.deleted_key{
-    color:red;
-}
+.hover{ background-color:#F2FAC0;}
 
-.warning{
-    color:#5961D9;
-    font-weight: bold;
-}
+#right_container{ position:absolute; top:0; right:0; font-size:0.8em; padding:10px; }
+    #right_container .toggle { float:right; color:#777;}
+        #right_container #server_stats { border:2px solid #999; margin-top:30px;display:none; padding:10px; clear:both; font-family: courier; background:#FFF;}
+            #right_container #server_stats h2 { margin-top:0; }
+            #right_container #server_stats table{ border-collapse:collapse; }
+                #right_container #server_stats table td{ border:1px solid #E3E3E3; padding:3px; }
+
+#footer{ clear:both; }
