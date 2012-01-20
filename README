@@ -9,14 +9,14 @@ It expects you are running Redis locally on the standard port 6379
 Feature list:
 -------------------------
 
-* Switch database
 * Show friendly message when redis server is not running
 * Delete member from a hash/set
 * Add new string, hash, list, set
-* Add some CSS magic
+
 
 
 Done:
 -------------------------
+* Switch database (thx #royfox)
 * Show friendly message when trying to open a key that does not exist anymore.
 * Set max numbers of keys returned when searching
