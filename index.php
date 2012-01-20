@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include('lib/redis/RedisClient.php');
 include('lib/redis/Redis.php');
 include('Router.php');

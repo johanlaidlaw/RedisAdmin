@@ -3,6 +3,9 @@ class RedisController extends ApplicationController{
 
     function __construct(){
         $this->redis = lib\redis\RedisClient::getPredisObject();
+        if(isset($_SESSION['redis_db'])){
+            $this->redis->select(intval($_SESSION['redis_db']));
+        }
     }
 
     function keys(){
@@ -25,7 +28,11 @@ class RedisController extends ApplicationController{
     }
 
 
-
+    function setDatabase(){
+        if(isset($this->params['db'])){
+            $_SESSION['redis_db'] = $this->params['db'];
+        }
+    }
 
 
     protected function returnAllFields($fields, $type){
