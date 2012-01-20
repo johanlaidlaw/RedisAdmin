@@ -91,9 +91,9 @@ $(document).ready(function(){
 
 
     /*
-    The ajax call to insert a new field to a hash
+    The ajax call to insert a new field to a type
      */
-    $(document).on("submit","form[name=new_field_to_hash]",function(){
+    $(document).on("submit","form",function(){
         var redis_value_container = $(this).parent().parent();
         $.ajax({
             url: $(this).attr('action'),
@@ -116,6 +116,15 @@ $(document).ready(function(){
         $(this).html('<form name="new_field_to_hash" method="post" action="/hash/addField"><input type="hidden" value="'+key.html()+'" name="key" /><input type="text" name="field" /> => <input type="text" name="value"/> <input type="submit" value="ok" /></form>');
         
     });
+
+
+    $(document).on("click",".add_field_to_set",function(){
+        $(this).removeClass().addClass('add_member_edit');
+        key = $(this).parent().prev();
+        $(this).html('<form name="new_field_to_set" method="post" action="/set/addField"><input type="hidden" value="'+key.html()+'" name="key" /><input type="text" name="value"/> <input type="submit" value="ok" /></form>');
+
+    });
+
 
 
 	function expandKey(){
@@ -156,8 +165,9 @@ $(document).ready(function(){
     }
     function addType(type){
         var new_type = '';
-        if(type == "hash")
-            new_type = '<div class="add_field_to_hash">Add member to hash</div>';
+        if(type == "hash" || type== "set")
+            new_type = '<div class="add_field add_field_to_'+type+'">Add field to '+type+'</div>';
+
         return new_type;
     }
 

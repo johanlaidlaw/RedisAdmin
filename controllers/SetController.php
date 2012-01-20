@@ -9,6 +9,10 @@ class SetController extends RedisController implements iRedisType
 {
 
 
+    public function addField(){
+        $this->redis->sadd($this->params['key'], $this->params['value']);
+        $this->getAllFields($this->params['key']);
+    }
 
     public function editField(){
         $this->redis->srem($this->params['key'], $this->params['old_value']);
