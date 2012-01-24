@@ -125,6 +125,14 @@ $(document).ready(function(){
 
     });
 
+    $(document).on("click","#flushdb",function(){
+        db = $("#database_select option:selected").val();
+        if(confirm("This will completely wipe database number "+db+". Is this alright?")){
+            flushdb();
+        }else{
+            alert("Good thing I asked you ;)");
+        }
+    });
 
 
 	function expandKey(){
@@ -216,7 +224,6 @@ function getKeys(){
         url: "/redis/keys?pattern="+pattern,
         dataType: 'json',
         success: function(data, status) {
-            console.log(data);
 
             if(data.keys.length < 1){
                 $("#redis_container").html("No keys matching");
@@ -236,4 +243,14 @@ function getKeys(){
     });
 }
 
-
+function flushdb(){
+    $.ajax({
+        type: "post",
+        url: "/redis/flushdb",
+        dataType: 'json',
+        success: function(data, status) {
+            $("#redis_container").html("No keys matching");
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {}
+    });
+}

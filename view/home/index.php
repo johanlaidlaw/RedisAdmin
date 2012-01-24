@@ -7,6 +7,7 @@
                 <option value="<?php echo $i;?>"<?php if($i==$selected):?> selected<?php endif;?>><?php echo $i;?></option>
             <?php endforeach;?>
         </select>
+        <span id="flushdb">Flushdb</span>
     </div>
 	<div id="redis_container">
 	</div>

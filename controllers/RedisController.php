@@ -34,6 +34,9 @@ class RedisController extends ApplicationController{
         }
     }
 
+    function flushdb(){
+        $this->redis->flushdb();
+    }
 
     protected function returnAllFields($fields, $type){
         if(empty($fields))
