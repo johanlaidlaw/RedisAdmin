@@ -73,9 +73,11 @@ $(document).ready(function(){
 		mouseover: function(){
 			$(this).siblings().removeClass('hover');
 			$(this).addClass('hover').css({cursor:'pointer'});
+            $(this).find('img').show();
 		},
 		mouseout: function(){
 			$(this).removeClass('hover');
+            $(this).find('img').hide();
 		}
 	});
 
@@ -134,10 +136,19 @@ $(document).ready(function(){
         }
     });
 
+    $(document).on("click",".delete_key",function(){
+        if(confirm("You did mean to delete that right?")){
+            deleteKey($(this).prev().html());
+        }
+        return false;
+    });
+
+
+
 
 	function expandKey(){
 		var element = $("#redis_container div.hover");
-		var value = element.html();
+		var value = element.find('.key_name').html();
 		if(element.next().attr('class') == 'redis_value_container'){
 			element.next().remove();
 		}else{
@@ -224,7 +235,6 @@ function getKeys(){
         url: "/redis/keys?pattern="+pattern,
         dataType: 'json',
         success: function(data, status) {
-
             if(data.keys.length < 1){
                 $("#redis_container").html("No keys matching");
             } else {
@@ -234,7 +244,7 @@ function getKeys(){
                     element = '';
 
                 $.each(data.keys, function(i, item){
-                    element += '<div class="r_key" type="'+item[1]+'">'+item[0]+'</div>';
+                    element += '<div class="r_key" type="'+item[1]+'"><span class="key_name">'+item[0]+'</span> <img class="delete_key" src="img/trash.png" style="display: none; vertical-align: bottom" /></div>';
                 });
                 $("#redis_container").html(element);
             }
@@ -250,6 +260,25 @@ function flushdb(){
         dataType: 'json',
         success: function(data, status) {
             $("#redis_container").html("No keys matching");
+        }
+    });
+}
+
+function deleteKey(key){
+   var element = $("#redis_container div.hover");
+   $.ajax({
+        type: "post",
+        url: "/redis/del?key="+key,
+        dataType: 'json',
+        success: function(data, status) {
+            setTimeout(function(){
+                element.hide(500, function(){
+                    if(element.next().attr('class') == 'redis_value_container'){
+                        element.next().remove();
+                    }
+                    element.remove();
+                });
+            },700);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {}
     });
