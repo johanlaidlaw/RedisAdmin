@@ -9,5 +9,6 @@ interface iRedisType{
 
     public function editField();
     public function getValues();
+    
 
 }
