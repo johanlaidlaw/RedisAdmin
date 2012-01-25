@@ -2,10 +2,14 @@
 class HomeController extends ApplicationController{
 	function index(){
 
-        $this->redis = lib\redis\RedisClient::getPredisObject();
-        $server_info = $this->redis->info();
+        try{
+            $this->redis = lib\redis\RedisClient::getPredisObject();
+            $this->set('server_info',$this->redis->info());
 
-        $this->set('server_info',$server_info);
+        }catch(Exception $e){
+            $this->set("redis_error",true);
+        }
+
 		$this->render();
 	}
 }

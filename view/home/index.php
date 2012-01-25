@@ -1,3 +1,15 @@
+<?php
+if($this->get('redis_error')){
+    ?>
+    <div id="redis_error">
+        <p>There is a problem connecting to Redis.</p>
+        <p>Are you sure your Redis server is connected?</p>
+    </div>
+    <?php
+    exit;   
+}
+?>
+
 <div id="left_container">
 	<div id="search_container">
         Keys <input type="text" id="redis_search">* in db
