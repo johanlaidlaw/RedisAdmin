@@ -206,7 +206,7 @@ $(document).ready(function(){
 				if(e.which == 13){
 					value = input.val();
                     key = input.parent().parent().parent().prev();
-					key_name = key.html();
+					key_name = key.find('.key_name').html();
                     type = key.attr('type');
 					field = input.parent().prev().html();
 					$.ajax({
