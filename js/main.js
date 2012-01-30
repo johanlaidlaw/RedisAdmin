@@ -114,16 +114,16 @@ $(document).ready(function(){
 
     $(document).on("click",".add_field_to_hash",function(){
         $(this).removeClass().addClass('add_member_edit');
-        key = $(this).parent().prev();
-        $(this).html('<form name="new_field_to_hash" method="post" action="/hash/addField"><input type="hidden" value="'+key.html()+'" name="key" /><input type="text" name="field" /> => <input type="text" name="value"/> <input type="submit" value="ok" /></form>');
+        key_name = $(this).parent().prev().find('.key_name').html();
+        $(this).html('<form name="new_field_to_hash" method="post" action="/hash/addField"><input type="hidden" value="'+key+'" name="key" /><input type="text" name="field" /> => <input type="text" name="value"/> <input type="submit" value="ok" /></form>');
         
     });
 
 
     $(document).on("click",".add_field_to_set",function(){
         $(this).removeClass().addClass('add_member_edit');
-        key = $(this).parent().prev();
-        $(this).html('<form name="new_field_to_set" method="post" action="/set/addField"><input type="hidden" value="'+key.html()+'" name="key" /><input type="text" name="value"/> <input type="submit" value="ok" /></form>');
+        key = $(this).parent().prev().find('.key_name').html();
+        $(this).html('<form name="new_field_to_set" method="post" action="/set/addField"><input type="hidden" value="'+key+'" name="key" /><input type="text" name="value"/> <input type="submit" value="ok" /></form>');
 
     });
 
