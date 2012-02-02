@@ -19,3 +19,4 @@ local.properties
 .settings/
 .loadpath
 .externalToolBuilders/
+.idea

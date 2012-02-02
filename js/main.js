@@ -1,4 +1,7 @@
 $(document).ready(function(){
+
+    getKeys();
+
 	$("body").click(function(){
 		$('.edit').parent().html($('.edit').val());
 	});
@@ -47,62 +50,38 @@ $(document).ready(function(){
 			}
 		}else{
 			var value = $(this).val();
-			$.ajax({
-				url: "/redis/exec?command=keys&key="+value+"*",
-				dataType: 'json',
-				success: function(data, status) {
-					if($.isEmptyObject(data)){
-						$("#redis_container").html("No keys matching");
-					} else {
-						element = '';
-						$.each(data, function(i, item){
-							element += '<div class="r_key">'+item+'</div>';
-						})
-						$("#redis_container").html(element);
-					}
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {}
-			});
+            getKeys();
 		}
 		
 	});
 	
-	
+
+    $("#database_select").change(function(){
+        var value = $(this).val();
+        $.ajax({
+            url: "/redis/setDatabase?db="+value,
+            dataType: 'json',
+            success: function(data, status) {
+                getKeys();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {}
+        });
+    });
+
 	$('.r_key').live({
 		click: expandKey,
 		mouseover: function(){
 			$(this).siblings().removeClass('hover');
 			$(this).addClass('hover').css({cursor:'pointer'});
+            $(this).find('img').show();
 		},
 		mouseout: function(){
 			$(this).removeClass('hover');
+            $(this).find('img').hide();
 		}
 	});
-	
-	
-	function expandKey(){
-		var element = $("#redis_container div.hover");
-		var value = element.html();
-		if(element.next().attr('class') == 'redis_value_container'){
-			element.next().remove();
-		}else{
-			$.ajax({
-				url: "/redis/get_values?key="+value,
-				dataType: 'json',
-				success: function(data, status) {
-					field = '<div class="redis_value_container">';
-					$.each(data,function(i,item){
-						field += '<div class="r_member"><span class="r_field">'+i+'</span> => <span class="r_value">'+item+'</span></div>';
-					});
-					field += '</div>';
-					element.after(field);
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {}
-			});
-		}
-	}
-	
-	$('.r_value').live({
+
+    $('.r_value').live({
 		click: editValue,
 		mouseover:function(){
 			$(this).addClass('hover');
@@ -111,8 +90,107 @@ $(document).ready(function(){
 			$(this).removeClass('hover');
 		}
 	});
-	
-	
+
+
+    /*
+    The ajax call to insert a new field to a type
+     */
+    $(document).on("submit","form",function(){
+        var redis_value_container = $(this).parent().parent();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(data, status) {
+                fields = populateRedisValueContainer(data.data, data.type);
+                redis_value_container.html(fields);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {}
+        });
+        return false;
+    });
+
+
+    $(document).on("click",".add_field_to_hash",function(){
+        $(this).removeClass().addClass('add_member_edit');
+        key_name = $(this).parent().prev().find('.key_name').html();
+        $(this).html('<form name="new_field_to_hash" method="post" action="/hash/addField"><input type="hidden" value="'+key+'" name="key" /><input type="text" name="field" /> => <input type="text" name="value"/> <input type="submit" value="ok" /></form>');
+        
+    });
+
+
+    $(document).on("click",".add_field_to_set",function(){
+        $(this).removeClass().addClass('add_member_edit');
+        key = $(this).parent().prev().find('.key_name').html();
+        $(this).html('<form name="new_field_to_set" method="post" action="/set/addField"><input type="hidden" value="'+key+'" name="key" /><input type="text" name="value"/> <input type="submit" value="ok" /></form>');
+
+    });
+
+    $(document).on("click","#flushdb",function(){
+        db = $("#database_select option:selected").val();
+        if(confirm("This will completely wipe database number "+db+". Is this alright?")){
+            flushdb();
+        }else{
+            alert("Good thing I asked you ;)");
+        }
+    });
+
+    $(document).on("click",".delete_key",function(){
+        if(confirm("You did mean to delete that right?")){
+            deleteKey($(this).prev().html());
+        }
+        return false;
+    });
+
+
+
+
+	function expandKey(){
+		var element = $("#redis_container div.hover");
+		var value = element.find('.key_name').html();
+		if(element.next().attr('class') == 'redis_value_container'){
+			element.next().remove();
+		}else{
+            type = element.attr('type');
+			$.ajax({
+				url: type+"/getValues?key="+value,
+				dataType: 'json',
+				success: function(data, status) {
+                    if(data == false){
+                        element.addClass("deleted_key").html("This key has been deleted");
+                        setTimeout(function(){
+                            element.hide(2000, function(){ element.remove(); });
+                        },1000);
+                    }else{
+                        field = '<div class="redis_value_container">';
+                        field += populateRedisValueContainer(data.data, data.type);
+                        field += '</div>';
+                        element.after(field);
+                    }
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {}
+			});
+		}
+	}
+
+    function populateRedisValueContainer(data, type){
+        field = '';
+        $.each(data,function(i,item){
+            field += '<div class="r_member"><span class="r_field">'+i+'</span> => <span class="r_value">'+item+'</span></div>';
+        });
+        field += addType(type);
+        return field;
+    }
+    function addType(type){
+        var new_type = '';
+        if(type == "hash" || type== "set")
+            new_type = '<div class="add_field add_field_to_'+type+'">Add field to '+type+'</div>';
+
+        return new_type;
+    }
+
+
 	function editValue(){
 		element = $(this);
 		hasInput = element.find(':input');
@@ -127,10 +205,13 @@ $(document).ready(function(){
 			input.keyup(function(e){
 				if(e.which == 13){
 					value = input.val();
-					key = input.parent().parent().parent().prev().html();
+                    key = input.parent().parent().parent().prev();
+					key_name = key.find('.key_name').html();
+                    type = key.attr('type');
 					field = input.parent().prev().html();
 					$.ajax({
-						url: "/redis/setValueForField?key="+key+"&field="+field+"&value="+value,
+						url: type+"/editField",
+                        data: {'key': key_name, 'field': field, 'value' : value, 'old_value' : content},
 						dataType: 'json',
 						success: function(data, status) {
 							new_content = input.val();
@@ -146,3 +227,59 @@ $(document).ready(function(){
 	}
 	
 });
+
+
+function getKeys(){
+    var pattern = $("#redis_search").val() + "*";
+    $.ajax({
+        url: "/redis/keys?pattern="+pattern,
+        dataType: 'json',
+        success: function(data, status) {
+            if(data.keys.length < 1){
+                $("#redis_container").html("No keys matching");
+            } else {
+                if(data.sliced)
+                    element = '<div class="warning">More than 100 keys found. Showing first 100 only</div>';
+                else
+                    element = '';
+
+                $.each(data.keys, function(i, item){
+                    element += '<div class="r_key" type="'+item[1]+'"><span class="key_name">'+item[0]+'</span> <img class="delete_key" src="img/trash.png" style="display: none; vertical-align: bottom" /></div>';
+                });
+                $("#redis_container").html(element);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {}
+    });
+}
+
+function flushdb(){
+    $.ajax({
+        type: "post",
+        url: "/redis/flushdb",
+        dataType: 'json',
+        success: function(data, status) {
+            $("#redis_container").html("No keys matching");
+        }
+    });
+}
+
+function deleteKey(key){
+   var element = $("#redis_container div.hover");
+   $.ajax({
+        type: "post",
+        url: "/redis/del?key="+key,
+        dataType: 'json',
+        success: function(data, status) {
+            setTimeout(function(){
+                element.hide(500, function(){
+                    if(element.next().attr('class') == 'redis_value_container'){
+                        element.next().remove();
+                    }
+                    element.remove();
+                });
+            },700);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {}
+    });
+}
