@@ -1,5 +1,7 @@
 <?php
 
+require_once('environment.default.php');
+
 session_start();
 
 include('lib/redis/RedisClient.php');
