@@ -1,5 +1,6 @@
 <?php
 
+require_once('environment.default.php');
 
 include('lib/redis/RedisClient.php');
 include('lib/redis/Redis.php');
