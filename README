@@ -3,7 +3,7 @@
 3. git submodule update
 3. Access it (http://redisadmin)
 
-It expects you are running Redis locally on the standard port 6379 with no password
+It expects you are running Redis locally on the standard port 6379
 
 Feature requests:
 -------------------------
@@ -20,3 +20,4 @@ Done:
 * Switch database (thx #royfox)
 * Show friendly message when trying to open a key that does not exist anymore.
 * Set max numbers of keys returned when searching
+>>>>>>> johan/master
