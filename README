@@ -5,19 +5,21 @@
 
 It expects you are running Redis locally on the standard port 6379
 
+NOTICE: The app is using the 'keys' command to search for keys, so if you have a large dataset it could block redis.
+
+
 Feature requests:
 -------------------------
-
-* Show friendly message when redis server is not running
+* Support for lists and sorted sets
 * Delete member from a hash/set
-* Add new string, hash, list, set
+* Add new redis key
 
 
 Done:
 -------------------------
+* Show friendly message when redis server is not running
 * Delete keys
 * Flushdb
 * Switch database (thx #royfox)
 * Show friendly message when trying to open a key that does not exist anymore.
 * Set max numbers of keys returned when searching
->>>>>>> johan/master
