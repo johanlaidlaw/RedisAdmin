@@ -2,6 +2,7 @@
 
 require_once('environment.default.php');
 
+session_set_cookie_params(0,'/',$_SERVER['SERVER_NAME']);
 session_start();
 
 include('lib/redis/RedisClient.php');
