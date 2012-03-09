@@ -27,8 +27,7 @@ class ListController extends RedisController implements iRedisType
 
 
     private function getAllFields($key){
-    	$size = $this->redis->llen($key);
-        $fields = $this->redis->lrange($key, 0, $size-1);
+        $fields = $this->redis->lrange($key, 0, -1);
         $this->returnAllFields($fields, 'list');
     }
 }
