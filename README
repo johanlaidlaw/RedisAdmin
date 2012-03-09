@@ -10,16 +10,17 @@ NOTICE: The app is using the 'keys' command to search for keys, so if you have a
 
 Feature requests:
 -------------------------
-* Support for lists and sorted sets
+* Support for sorted sets
 * Delete member from a hash/set
 * Add new redis key
 
 
 Done:
 -------------------------
+* Support for lists (thx @makmonty)
 * Show friendly message when redis server is not running
 * Delete keys
 * Flushdb
-* Switch database (thx #royfox)
+* Switch database (thx @royfox)
 * Show friendly message when trying to open a key that does not exist anymore.
 * Set max numbers of keys returned when searching
