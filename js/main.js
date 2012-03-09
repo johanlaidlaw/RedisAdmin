@@ -244,7 +244,7 @@ function getKeys(){
                     element = '';
 
                 $.each(data.keys, function(i, item){
-                    element += '<div class="r_key" type="'+item[1]+'"><span class="key_name">'+item[0]+'</span> <img class="delete_key" src="img/trash.png" style="display: none; vertical-align: bottom" /></div>';
+                    element += '<div class="r_key" type="'+item[1]+'"><span class="key_name">'+item[0]+'</span> <span class="key_type">'+item[1]+'</span> <img class="delete_key" src="img/trash.png" style="display: none; vertical-align: bottom" /></div>';
                 });
                 $("#redis_container").html(element);
             }

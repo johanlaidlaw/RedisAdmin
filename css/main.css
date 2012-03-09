@@ -14,6 +14,7 @@ body{ font-family: Georgia; margin:0; }
     .redis_value_container{ padding-left: 30px; }
     .r_field{ color:#6E0D0D; }
     .r_key { padding:5px 5px 5px 10px; border-bottom:1px solid #eee; border-right:1px solid #eee; }
+    	.r_key .key_type { font-size:0.7em; color:#bbb; }
     .r_value{ color:#025403; }
     .r_member { padding:3px; border-bottom:1px solid #eee; }
 

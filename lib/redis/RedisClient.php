@@ -12,7 +12,7 @@ class RedisClient {
 	
 	private static $conf = array(
 		'host'     => '127.0.0.1', 
-		'port'     => 6379
+		'port'     => REDIS_DB_PORT
 	);
 	
 	private function __construct() {
