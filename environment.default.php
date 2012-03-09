@@ -21,3 +21,10 @@ if(is_readable(dirname(__FILE__).'/environment.php')) {
 	echo 'See "'.$_SERVER['DOCUMENT_ROOT'].'environment.default.php'.'" for more info.<br />';
 	exit;
 }
+
+
+function defineIfUndefined($name, $value) {
+	if(!defined($name))define($name,$value);
+}
+
+defineIfUndefined("REDIS_DB_PORT", 6379);
