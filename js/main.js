@@ -138,7 +138,7 @@ $(document).ready(function(){
 
     $(document).on("click",".delete_key",function(){
         if(confirm("You did mean to delete that right?")){
-            deleteKey($(this).prev().html());
+            deleteKey($(this).siblings(".key_name").text());
         }
         return false;
     });
