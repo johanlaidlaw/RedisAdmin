@@ -5,7 +5,7 @@ body{ font-family: Georgia; margin:0; }
     #search_container #redis_search { font-size:1em; width:533px; }
 
 #search_container
-    #database_select { font-size:2em; }
+    #database_select { font-size:1em; }
     #flushdb {font-size:0.6em; color:#E6E6E6;}
     #flushdb:hover{cursor:pointer; color:#ABABAB; }
 
