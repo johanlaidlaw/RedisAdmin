@@ -23,7 +23,7 @@ body{ font-family: Georgia; margin:0; }
     .deleted_key{ color:red; }
     .warning{ color:#993;font-weight: bold; background:#FFC; font-size:16px; padding:6px; border-bottom:1px solid #ccc;}
 
-.hover{ background-color:#F2FAC0;}
+.hover { background-color:#F2FAC0;}
 
 #right_container{ position:absolute; top:0; right:0; font-size:0.8em; padding:10px; }
     #right_container .toggle { float:right; color:#777;}
@@ -32,7 +32,7 @@ body{ font-family: Georgia; margin:0; }
             #right_container #server_stats table{ border-collapse:collapse; }
                 #right_container #server_stats table td{ border:1px solid #E3E3E3; padding:3px; }
 
-#footer{ clear:both; }
+#footer { clear:both; }
 
 #redis_error{
     padding:10px;
@@ -43,3 +43,5 @@ body{ font-family: Georgia; margin:0; }
     text-align: center;
 
 }
+
+#show_all { display:block; float:right; cursor:pointer; color:#666; }
