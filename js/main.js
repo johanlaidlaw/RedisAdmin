@@ -55,6 +55,10 @@ $(document).ready(function(){
 		
 	});
 	
+	$(document).on("click", "#show_all", function() {
+		getKeys(true);
+	});
+	
 
     $("#database_select").change(function(){
         var value = $(this).val();
@@ -229,17 +233,18 @@ $(document).ready(function(){
 });
 
 
-function getKeys(){
-    var pattern = $("#redis_search").val() + "*";
+function getKeys(all){
+	var all_param = (typeof all == "undefined" || !all)? 0 : 1;
+    var pattern = $("#redis_search").val();
     $.ajax({
-        url: "/redis/keys?pattern="+pattern,
+        url: "/redis/keys?pattern="+pattern+"&all="+all_param,
         dataType: 'json',
         success: function(data, status) {
             if(data.keys.length < 1){
                 $("#redis_container").html("No keys matching");
             } else {
                 if(data.sliced)
-                    element = '<div class="warning">More than 100 keys found. Showing first 100 only</div>';
+                    element = '<div class="warning">'+data.count+' keys found. Showing first 100 only. <span id="show_all">Show all</span></div>';
                 else
                     element = '';
 
