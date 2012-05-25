@@ -12,7 +12,7 @@ if($this->get('redis_error')){
 
 <div id="left_container">
 	<div id="search_container">
-        Keys <input type="text" id="redis_search">* in db
+        Key <input type="text" id="redis_search"> in db
         <select id="database_select">
             <?php $selected = isset($_SESSION['redis_db']) ? $_SESSION['redis_db'] : 0;?>
             <?php foreach(range(0, 15) as $i):?>

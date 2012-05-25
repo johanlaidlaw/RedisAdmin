@@ -9,17 +9,26 @@ class RedisController extends ApplicationController{
     }
 
     function keys(){
-        $keys = $this->redis->keys($this->params['pattern']);
+    	$pattern = $this->params['pattern'];
+    	$show_all = $this->params['all'];
+    	
+    	if(strpos($pattern, "*") !== false) {
+    		$keys = $this->redis->keys($pattern);
+    	} else {
+        	$keys = ($this->redis->exists($pattern))? array($pattern) : array();
+    	}
+    	
         $keys_with_types = array();
+        $count = count($keys);
         $sliced = false;
-        if(count($keys) > 100){
+        if($count > 100 && !$show_all){
             $sliced = true;
             $keys = array_slice($keys,0,100);
         }
         foreach($keys as $k){
             $keys_with_types[] = array($k, $this->redis->type($k));
         }
-        echo json_encode(array("keys" =>$keys_with_types, "sliced" => $sliced));
+        echo json_encode(array("keys" => $keys_with_types, "count" => $count, "sliced" => $sliced));
     }
 
     function del(){
