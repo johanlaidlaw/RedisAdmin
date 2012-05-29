@@ -3,7 +3,12 @@ $(document).ready(function(){
     getKeys();
 
 	$("body").click(function(){
-		$('.edit').parent().html($('.edit').val());
+		$('.r_value:not(.hover) .edit').each(function(){
+			var obj = $(this);
+			var value = obj.val();
+			var key = obj.parent().siblings(".r_field").text();
+			drawField(obj.parent().parent(), key, value);
+		});
 	});
 	
 	$('#redis_search').keyup(function(e){
@@ -45,14 +50,15 @@ $(document).ready(function(){
 			// keypress = Enter
 			expandKey();
 		}else if(e.which == 46){
-			if(confirm('Do you really want to delete this key?')){
-				console.log("Delete key");
+			var key_container = $("#redis_container .r_key.hover");
+			if(key_container.length) {
+				var key = key_container.children(".key_name").text();
+				deleteKey(key);
 			}
 		}else{
 			var value = $(this).val();
             getKeys();
 		}
-		
 	});
 	
 	$(document).on("click", "#show_all", function() {
@@ -72,27 +78,25 @@ $(document).ready(function(){
         });
     });
 
-	$('.r_key').live({
-		click: expandKey,
-		mouseover: function(){
-			$(this).siblings().removeClass('hover');
-			$(this).addClass('hover').css({cursor:'pointer'});
-            $(this).find('img').show();
-		},
-		mouseout: function(){
-			$(this).removeClass('hover');
-            $(this).find('img').hide();
-		}
+    // .r_key events
+	$(document).on("click", '.r_key', expandKey);
+	$(document).on("mouseover", '.r_key', function(){
+		$(this).siblings().removeClass('hover');
+		$(this).addClass('hover').css({cursor:'pointer'});
+        $(this).find('img').show();
+	});
+	$(document).on("mouseout", '.r_key', function(){
+		$(this).removeClass('hover');
+        $(this).find('img').hide();
 	});
 
-    $('.r_value').live({
-		click: editValue,
-		mouseover:function(){
-			$(this).addClass('hover');
-		},
-		mouseout: function(){
-			$(this).removeClass('hover');
-		}
+	// .r_value events
+    $(document).on("click", '.r_value', editValue);
+    $(document).on("mouseover", '.r_value', function(){
+		$(this).addClass('hover');
+	});
+    $(document).on("mouseout", '.r_value', function(){
+		$(this).removeClass('hover');
 	});
 
 
@@ -107,8 +111,7 @@ $(document).ready(function(){
             data: $(this).serialize(),
             dataType: 'json',
             success: function(data, status) {
-                fields = populateRedisValueContainer(data.data, data.type);
-                redis_value_container.html(fields);
+                populateRedisValueContainer(redis_value_container, data.data, data.type);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {}
         });
@@ -141,9 +144,7 @@ $(document).ready(function(){
     });
 
     $(document).on("click",".delete_key",function(){
-        if(confirm("You did mean to delete that right?")){
-            deleteKey($(this).siblings(".key_name").text());
-        }
+    	deleteKey($(this).siblings(".key_name").text());
         return false;
     });
 
@@ -167,10 +168,9 @@ $(document).ready(function(){
                             element.hide(2000, function(){ element.remove(); });
                         },1000);
                     }else{
-                        field = '<div class="redis_value_container">';
-                        field += populateRedisValueContainer(data.data, data.type);
-                        field += '</div>';
-                        element.after(field);
+                        var container = $('<div class="redis_value_container"></div>');
+                        populateRedisValueContainer(container, data.data, data.type);
+                        element.after(container);
                     }
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {}
@@ -178,48 +178,60 @@ $(document).ready(function(){
 		}
 	}
 
-    function populateRedisValueContainer(data, type){
-        field = '';
+    function populateRedisValueContainer(container, data, type){
         $.each(data,function(i,item){
-            field += '<div class="r_member"><span class="r_field">'+i+'</span> => <span class="r_value">'+item+'</span></div>';
+        	var member = $('<div class="r_member"></div>');
+        	drawField(member, i, item);
+        	container.append(member);
         });
-        field += addType(type);
-        return field;
+        container.append(addType(type));
     }
     function addType(type){
-        var new_type = '';
+        var new_type = null;
         if(type == "hash" || type== "set")
-            new_type = '<div class="add_field add_field_to_'+type+'">Add field to '+type+'</div>';
+            new_type = $('<div class="add_field add_field_to_'+type+'">Add field to '+type+'</div>');
 
         return new_type;
+    }
+    
+    function drawField(container, key, value) {
+    	var empty_class = "";
+    	if(value == "") {
+    		empty_class = "empty";
+    		value = "empty";
+    	}
+    	
+    	var field = $('<span class="r_field">'+key+'</span> => <span class="r_value '+empty_class+'">'+value+'</span>');
+    	container.empty();
+    	container.append(field);
     }
 
 
 	function editValue(){
-		element = $(this);
-		hasInput = element.find(':input');
+		var element = $(this);
+		var hasInput = element.find(':input');
 		if(hasInput.length == 0){
 			// Already an input field
-			content = element.html();
+			var content = (element.hasClass("empty"))? "" : element.html();
+			element.removeClass("empty");
 			element.html('<input type="text" class="edit" />');
-			input = $('.edit');
+			var input = $('.edit');
 			input.val(content);
 			input.attr('size',content.length*1.5);
 			input.focus();
 			input.keyup(function(e){
 				if(e.which == 13){
-					value = input.val();
-                    key = input.parent().parent().parent().prev();
-					key_name = key.find('.key_name').html();
-                    type = key.attr('type');
-					field = input.parent().prev().html();
+					var value = input.val();
+                    var key = input.parent().parent().parent().prev();
+					var key_name = key.find('.key_name').html();
+                    var type = key.attr('type');
+					var field = input.parent().prev().html();
 					$.ajax({
 						url: type+"/editField",
                         data: {'key': key_name, 'field': field, 'value' : value, 'old_value' : content},
 						dataType: 'json',
 						success: function(data, status) {
-							new_content = input.val();
-							element.html(new_content);	
+							drawField(input.parent().parent(), field, value);
 						},
 						error: function(XMLHttpRequest, textStatus, errorThrown) {}
 					});
@@ -270,21 +282,23 @@ function flushdb(){
 }
 
 function deleteKey(key){
-   var element = $("#redis_container div.hover");
-   $.ajax({
-        type: "post",
-        url: "/redis/del?key="+key,
-        dataType: 'json',
-        success: function(data, status) {
-            setTimeout(function(){
-                element.hide(500, function(){
-                    if(element.next().attr('class') == 'redis_value_container'){
-                        element.next().remove();
-                    }
-                    element.remove();
-                });
-            },700);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {}
-    });
+	if(confirm('Do you really want to delete the key '+key+'?')) {
+	   var element = $("#redis_container div.hover");
+	   $.ajax({
+	        type: "post",
+	        url: "/redis/del?key="+key,
+	        dataType: 'json',
+	        success: function(data, status) {
+	            setTimeout(function(){
+	                element.hide(500, function(){
+	                    if(element.next().attr('class') == 'redis_value_container'){
+	                        element.next().remove();
+	                    }
+	                    element.remove();
+	                });
+	            },700);
+	        },
+	        error: function(XMLHttpRequest, textStatus, errorThrown) {}
+	    });
+	}
 }
