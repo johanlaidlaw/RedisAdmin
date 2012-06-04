@@ -15,7 +15,9 @@ body{ font-family: Georgia; margin:0; }
     .r_field{ color:#6E0D0D; }
     .r_key { padding:5px 5px 5px 10px; border-bottom:1px solid #eee; border-right:1px solid #eee; }
     	.r_key .key_type { font-size:0.7em; color:#bbb; }
-    .r_value{ color:#025403; }
+    .r_value{ color:#025403; cursor:pointer; display:inline-block; }
+    	.r_value input.edit { color:inherit; font-size:inherit; font-family:inherit; outline:none; border:0; background:#eee; padding:0; margin:0; }
+    	.r_value.empty { color:#aaa; font-style:italic; }
     .r_member { padding:3px; border-bottom:1px solid #eee; }
 
     .add_field:hover{cursor:pointer; color:#7E93F2;}
