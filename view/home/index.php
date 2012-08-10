@@ -10,6 +10,7 @@ if($this->get('redis_error')){
 }
 ?>
 
+
 <div id="left_container">
 	<div id="search_container">
         Key <input type="text" id="redis_search"> in db
@@ -19,11 +20,20 @@ if($this->get('redis_error')){
                 <option value="<?php echo $i;?>"<?php if($i==$selected):?> selected<?php endif;?>><?php echo $i;?></option>
             <?php endforeach;?>
         </select>
-        <span id="flushdb">Flushdb</span>
+        <?php if($this->get('environments')):?>
+        and environment
+            <select id="environment_select">
+                <?php foreach($this->get('environments') as $key => $value):?>
+                    <option value="<?php echo $key;?>"><?php echo $key;?></option>
+                <?php endforeach;?>
+            </select>
+        <?php endif;?>
+        <span id="flushdb">[Flushdb]</span>
     </div>
 	<div id="redis_container">
 	</div>
 </div>
+
 
 <div id="right_container">
     <a class="toggle" href = "#" onclick="$('#server_stats').toggle();return false;">Toggle stats</a>
