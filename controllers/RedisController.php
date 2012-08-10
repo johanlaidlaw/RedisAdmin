@@ -5,7 +5,9 @@ class RedisController extends ApplicationController{
         parent::__construct();
         if(isset($_SESSION['redis_environment'])){
             $port = $this->Config->get("environment", $_SESSION['redis_environment']);
-            lib\redis\RedisClient::setPort($port);
+            if($port){
+                lib\redis\RedisClient::setPort($port);
+            }
         }
         $this->redis = lib\redis\RedisClient::getPredisObject();
         if(isset($_SESSION['redis_db'])){
