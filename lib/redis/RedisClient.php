@@ -19,7 +19,11 @@ class RedisClient {
 		self::$predis = self::getPredisObject();
 		self::$instance = $this;
 	}
-	
+
+    public function setPort($port){
+        self::$conf['port'] = $port;
+    }
+
 	public static function getRedis() {
 		if(self::$instance === null)
 			self::$instance = new Redis();

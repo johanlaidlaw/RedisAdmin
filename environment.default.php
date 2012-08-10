@@ -10,7 +10,7 @@ define("REDIS_DB_PASSWORD", "mypassword");
 
  */
 
-
+$config = array();
 
 // First read the settings for this environment!
 if(is_readable(dirname(__FILE__).'/environment.php')) {

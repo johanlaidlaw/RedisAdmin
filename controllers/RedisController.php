@@ -2,6 +2,13 @@
 class RedisController extends ApplicationController{
 
     function __construct(){
+        parent::__construct();
+        if(isset($_SESSION['redis_environment'])){
+            $port = $this->Config->get("environment", $_SESSION['redis_environment']);
+            if($port){
+                lib\redis\RedisClient::setPort($port);
+            }
+        }
         $this->redis = lib\redis\RedisClient::getPredisObject();
         if(isset($_SESSION['redis_db'])){
             $this->redis->select(intval($_SESSION['redis_db']));
@@ -40,6 +47,11 @@ class RedisController extends ApplicationController{
     function setDatabase(){
         if(isset($this->params['db'])){
             $_SESSION['redis_db'] = $this->params['db'];
+        }
+    }
+    function setEnvironment(){
+        if(isset($this->params['environment'])){
+            $_SESSION['redis_environment'] = $this->params['environment'];
         }
     }
 
