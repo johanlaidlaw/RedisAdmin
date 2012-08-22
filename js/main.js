@@ -78,6 +78,19 @@ $(document).ready(function(){
         });
     });
 
+    $("#environment_select").change(function(){
+        var value = $(this).val();
+        $.ajax({
+            url: "/redis/setEnvironment?environment="+value,
+            dataType: 'json',
+            success: function(data, status) {
+                getKeys();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {}
+        });
+    });
+
+
     // .r_key events
 	$(document).on("click", '.r_key', expandKey);
 	$(document).on("mouseover", '.r_key', function(){

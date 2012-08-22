@@ -12,5 +12,6 @@ function autoloader($class_name)
 
 spl_autoload_register('autoloader');
 
+$globalConfig = new Config($config);
 
 ?>

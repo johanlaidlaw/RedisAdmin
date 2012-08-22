@@ -1,13 +1,13 @@
 body{ font-family: Georgia; margin:0; }
 #wrap{ width:100%; margin:0 auto; }
 
-#search_container { font-size:2em; padding:9px;  border-bottom:1px solid #ccc;}
+#search_container { font-size:1.2em; padding:9px;  border-bottom:1px solid #ccc; color:#555;}
     #search_container #redis_search { font-size:1em; width:533px; }
 
 #search_container
     #database_select { font-size:1em; }
-    #flushdb {font-size:0.6em; color:#E6E6E6;}
-    #flushdb:hover{cursor:pointer; color:#ABABAB; }
+    #flushdb { margin-left:10px; font-size:0.6em; color:#E87979;}
+    #flushdb:hover{cursor:pointer; color:#B84949; }
 
 #redis_container { border-top:1px solid #eee; overflow:auto; }
     .redis_key{ padding:1px; }

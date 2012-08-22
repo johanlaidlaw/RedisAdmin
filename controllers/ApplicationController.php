@@ -4,6 +4,11 @@ class ApplicationController{
 	var $params = array();
     var $view = array();
 
+    function __construct(){
+        global $globalConfig;
+        $this->Config = $globalConfig;
+    }
+
     function set($name, $value){
         $this->view[$name] = $value;
     }
