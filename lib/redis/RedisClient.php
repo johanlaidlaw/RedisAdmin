@@ -11,7 +11,7 @@ class RedisClient {
 	private static $predis = null;
 	
 	private static $conf = array(
-		'host'     => '127.0.0.1', 
+		'host'     => REDIS_DB_HOST, 
 		'port'     => REDIS_DB_PORT
 	);
 	
