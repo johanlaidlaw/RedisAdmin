@@ -28,4 +28,6 @@ function defineIfUndefined($name, $value) {
 	if(!defined($name))define($name,$value);
 }
 
+defineIfUndefined('REDIS_DB_HOST', '127.0.0.1');
 defineIfUndefined("REDIS_DB_PORT", 6379);
+defineIfUndefined('REDIS_DB_PASSWORD', '');
