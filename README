@@ -3,7 +3,7 @@
 3. git submodule update
 3. Access it (http://redisadmin)
 
-It expects you are running Redis locally on the standard port 6379
+You can configure which redis instance and which ports you want to connect to.
 
 NOTICE: The app is using the 'keys' command to search for keys, so if you have a large dataset it could block redis.
 
